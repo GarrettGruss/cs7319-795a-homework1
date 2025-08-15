@@ -1,3 +1,4 @@
+"""Kuzu GraphRAG Database Frontend - A Streamlit interface for Kuzu graph database."""
 import streamlit as st
 import kuzu
 
@@ -9,17 +10,23 @@ st.markdown("### Hello World! Welcome to your Kuzu graph database interface.")
 
 @st.cache_resource
 def init_database():
+    """Initialize connection to Kuzu database.
+    
+    Returns:
+        tuple: (database, connection) objects or (None, None) if connection fails
+    """
     try:
         db = kuzu.Database("./kuzu_db")
         conn = kuzu.Connection(db)
         return db, conn
-    except Exception as e:
+    except (kuzu.Exception, OSError) as e:
         st.error(f"Failed to connect to Kuzu database: {e}")
         return None, None
 
 
 def main():
-    db, conn = init_database()
+    """Main application function that sets up the Streamlit interface."""
+    _, conn = init_database()
 
     if conn is None:
         st.error("❌ Unable to connect to the database")
@@ -41,7 +48,7 @@ def main():
                 st.dataframe(tables)
             else:
                 st.info("No tables found in database")
-        except Exception as e:
+        except (kuzu.Exception, AttributeError) as e:
             st.warning(f"Could not retrieve tables: {e}")
 
     with col2:
@@ -56,7 +63,7 @@ def main():
                 df = result.get_as_df()
                 st.write("Query Results:")
                 st.dataframe(df)
-            except Exception as e:
+            except (kuzu.Exception, AttributeError) as e:
                 st.error(f"Query error: {e}")
 
     st.markdown("---")
