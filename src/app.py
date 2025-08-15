@@ -1,4 +1,5 @@
 """Kuzu GraphRAG Database Frontend - A Streamlit interface for Kuzu graph database."""
+
 import streamlit as st
 import kuzu
 
@@ -11,7 +12,7 @@ st.markdown("### Hello World! Welcome to your Kuzu graph database interface.")
 @st.cache_resource
 def init_database():
     """Initialize connection to Kuzu database.
-    
+
     Returns:
         tuple: (database, connection) objects or (None, None) if connection fails
     """
