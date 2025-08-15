@@ -47,7 +47,7 @@ uv run streamlit run app.py
 
 ## Development
 
-### Running Tests
+### Development Commands
 
 ```bash
 # Run all tests
@@ -55,6 +55,12 @@ uv run pytest
 
 # Run linting
 uv run ruff check .
+
+# Format code
+uv run ruff format .
+
+# Check formatting (without changes)
+uv run ruff format --check .
 
 # Run type checking
 uv run mypy .
