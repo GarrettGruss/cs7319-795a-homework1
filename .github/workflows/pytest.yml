@@ -27,19 +27,12 @@ jobs:
     - name: Install dependencies
       run: uv sync --dev
       
-    - name: Run tests with pytest and coverage
-      run: uv run pytest --cov=src --cov-report=term-missing --cov-report=xml --cov-report=html
-    
+    - name: Run tests
+      run: |
+        pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=src tests/ | tee pytest-coverage.txt
+
     - name: Coverage comment
-      id: coverage_comment
-      uses: py-cov-action/python-coverage-comment-action@v3
+      uses: MishaKav/pytest-coverage-comment@main
       with:
-        GITHUB_TOKEN: ${{ github.token }}
-        MERGE_COVERAGE_FILES: true
-    
-    - name: Store Pull Request comment to be posted
-      uses: actions/upload-artifact@v4
-      if: steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'
-      with:
-        name: python-coverage-comment-action
-        path: python-coverage-comment-action.txt
+        pytest-coverage-path: ./pytest-coverage.txt
+        junitxml-path: ./pytest.xml
